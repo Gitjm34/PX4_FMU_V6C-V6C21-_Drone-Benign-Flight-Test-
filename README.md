@@ -7,16 +7,16 @@
 ## 1. 실험 개요
 
 ### 1.1 실험 환경
-- **드론 모델**: PX4_FMU_V6C (V6C21)  
-- **비행 컨트롤러**: PX4 Autopilot (EKF2 기반 자세 추정)  
-- **지상통제소(GCS)**: QGroundControl  
-- **비행 장소**: 경희대학교 럭비장 (야외 오픈 필드-GPS 수신 원활)  
-- **비행 시간**: 약 2분 (배터리 70% 이상 유지)  
-- **비행 조건**: **정상 비행(No Attack)** 상태에서 수집  
+- **Drone Model**: PX4_FMU_V6C (V6C21)  
+- **Flight Controller**: PX4 Autopilot (EKF2 기반 자세 추정)  
+- **Ground Control Station(GCS)**: QGroundControl  
+- **Flight Location**: 경희대학교 럭비장 (야외 오픈 필드-GPS 수신 원활)  
+- **Flight Time**: 약 2분 (배터리 70% 이상 유지)  
+- **Flight Conditions**: **정상 비행(No Attack)** 상태에서 수집  
 
 ### 1.2 연구 목적
-1. **정상 비행 로그**를 기반으로 PX4 드론이 기록하는 센서 및 상태 정보를 기술적으로 분석  
-2. **GPS 스푸핑(위치 조작)**, **GPS 재밍(신호 방해)** 공격에 대응할 수 있는 **주요 피처**를 식별  
+1. **정상 비행 Ulg**를 기반으로 PX4 드론이 기록하는 센서 및 상태 정보를 기술적으로 분석  
+2. **GPS Spoofing(위치 조작)**, **GPS Jamming(신호 방해)** 공격에 대응할 수 있는 **주요 피처**를 식별  
 3. 향후 **TinyML 기반 이상 탐지 모델** 적용 시, 어떤 데이터가 공격 탐지에 유용한지 방향성 제시  
 
 ---
@@ -52,7 +52,7 @@
 - 착륙 혹은 급상승 구간 외엔 완만한 변동을 보임
 
 ---
-## 4. GPS 공격(스푸핑·재밍) 탐지를 위한 주요 피처
+## 4. GPS Attack(Spoofing·Jamming) 탐지를 위한 주요 피처
 
 ### 4.1 GPS Spoofing (위치 조작)
 - lat, lon, alt: 정상 경로에서 벗어나 급격히 튀는 값 발생 시 의심
@@ -63,14 +63,14 @@
 ### 4.2 GPS Jamming (신호 방해)
 - jamming_indicator: 값이 0 → 10 이상으로 급등하면 재밍 가능성
 - noise_per_ms: 잡음 세기가 급격히 증가 → 재밍 징후
-- satellites_used: 재밍으로 위성 수가 급격히 줄어들 수 있음
+- satellites_used: Jamming으로 위성 수가 급격히 줄어들 수 있음
 - fix_type: GPS 고정 해제(3D → 0)로 급격히 바뀔 가능성
 
 ---
 
 ## 6. 결론 및 향후 과제
 - 정상 비행 로그 분석을 통해 각 센서별 정상 패턴을 파악
-- GPS 스푸핑·재밍 시 주요 피처(위성 개수, jamming_indicator, noise_per_ms, eph, epv 등) 에서 급격한 변동 발생
+- GPS Spoofing·Jamming 시 주요 피처(위성 개수, jamming_indicator, noise_per_ms, eph, epv 등) 에서 급격한 변동 발생
 - 단순 임계값 접근 외에도 머신러닝 기반 이상 탐지 (예: KNN, Isolation Forest, LSTM) 등으로 성능 개선 가능
 - 실제 공격 시뮬레이션(GPS 스푸핑 장치, 재밍 장치) 환경에서 로그 수집 후, 해당 모델의 검증 수행 예정
 - TinyML 적용해 드론 내부 MCU에서 실시간 분석 가능성 연구 (메모리, 연산량 제한 고려)
@@ -90,12 +90,12 @@
 - 이메일: jkl3496@khu.ac.kr
 ---
 
-## 5. 코드 예시: GPS 재밍 탐지 스크립트
+## 5. 코드 예시: GPS Jamming 탐지 스크립트
 
 ```bash
 import pandas as pd
 
-# 재밍 지표 임계값 설정
+# Jamming 지표 임계값 설정
 JAMMING_THRESHOLD = 5
 NOISE_THRESHOLD = 110.0
 
